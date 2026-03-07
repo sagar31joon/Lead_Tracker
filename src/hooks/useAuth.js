@@ -28,8 +28,14 @@ export function useAuth() {
     }, []);
 
     const signOut = useCallback(async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) console.error('Supabase signout error:', error);
+        } catch (err) {
+            console.error('Unexpected signout error:', err);
+        } finally {
+            setUser(null);
+        }
     }, []);
 
     return { user, loading, signIn, signOut };
