@@ -1,0 +1,103 @@
+/* ========= Login Page ========= */
+.login-root {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(ellipse at 20% 0%, rgba(108, 99, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(0, 229, 255, 0.05) 0%, transparent 60%),
+        #0A0E1A;
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+}
+
+/* Floating background orbs */
+.login-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    pointer-events: none;
+    animation: orbFloat 12s ease-in-out infinite;
+    will-change: transform;
+}
+
+.login-orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(108, 99, 255, 0.4), transparent 70%);
+    top: -10%;
+    left: -5%;
+    animation-duration: 14s;
+}
+
+.login-orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.3), transparent 70%);
+    bottom: -5%;
+    right: -5%;
+    animation-duration: 10s;
+    animation-delay: -4s;
+}
+
+.login-orb-3 {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(108, 99, 255, 0.25), transparent 70%);
+    top: 50%;
+    right: 20%;
+    animation-duration: 16s;
+    animation-delay: -8s;
+}
+
+@keyframes orbFloat {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -20px) scale(1.05);
+    }
+
+    66% {
+        transform: translate(-20px, 15px) scale(0.95);
+    }
+}
+
+/* Card */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 36px;
+    background: rgba(18, 24, 41, 0.85) !important;
+    backdrop-filter: blur(30px) !important;
+    border: 1px solid rgba(108, 99, 255, 0.15) !important;
+    border-radius: 20px !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Logo */
+.login-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #6C63FF, #9D97FF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(108, 99, 255, 0.35);
+}
+
+/* ========= Responsive ========= */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 32px 24px;
+    }
+}

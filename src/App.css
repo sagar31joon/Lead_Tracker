@@ -1,0 +1,137 @@
+/* ========= Global ========= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #0A0E1A;
+  color: #E8EAED;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========= App Layout ========= */
+.app-root {
+  display: flex;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(108, 99, 255, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 100%, rgba(0, 229, 255, 0.04) 0%, transparent 60%),
+    #0A0E1A;
+}
+
+/* ========= Sidebar ========= */
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 4px;
+  transition: all 0.25s ease;
+}
+
+.sidebar-content.collapsed {
+  align-items: center;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.sidebar-content.collapsed .sidebar-logo {
+  justify-content: center;
+  padding: 14px 8px;
+}
+
+.sidebar-logo:hover {
+  opacity: 0.85;
+}
+
+.logo-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6C63FF, #9D97FF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px 16px;
+}
+
+/* ========= Main Content ========= */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.content-header {
+  padding: 12px 28px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.content-body {
+  padding: 12px 28px 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ========= Custom Scrollbar ========= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(108, 99, 255, 0.25);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 99, 255, 0.4);
+}
+
+/* ========= Selection ========= */
+::selection {
+  background: rgba(108, 99, 255, 0.3);
+  color: #fff;
+}
+
+/* ========= Responsive ========= */
+@media (max-width: 900px) {
+  .content-header {
+    padding: 10px 12px 6px;
+  }
+
+  .content-header h5 {
+    font-size: 1.15rem !important;
+  }
+
+  .content-body {
+    padding: 8px;
+  }
+
+  .app-root {
+    flex-direction: column;
+  }
+}

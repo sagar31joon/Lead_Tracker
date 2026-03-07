@@ -1,0 +1,88 @@
+.leads-table-container {
+  width: 100%;
+}
+
+/* ===== Toolbar Layout ===== */
+.leads-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.leads-search {
+  width: 100%;
+}
+
+.leads-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.leads-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Desktop: single-row toolbar */
+@media (min-width: 900px) {
+  .leads-toolbar {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .leads-search {
+    width: auto;
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .leads-filters {
+    flex-wrap: nowrap;
+  }
+}
+
+/* ===== Table scrollbar ===== */
+.leads-table-container .MuiTableContainer-root {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(108, 99, 255, 0.3) transparent;
+}
+
+.leads-table-container .MuiTableContainer-root::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.leads-table-container .MuiTableContainer-root::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.leads-table-container .MuiTableContainer-root::-webkit-scrollbar-thumb {
+  background: rgba(108, 99, 255, 0.3);
+  border-radius: 3px;
+}
+
+.leads-table-container .MuiTableContainer-root::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 99, 255, 0.5);
+}
+
+/* ===== Mobile filters: compact 2x2 grid ===== */
+@media (max-width: 899px) {
+  .leads-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .leads-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .leads-actions>button {
+    flex: 1;
+  }
+}
