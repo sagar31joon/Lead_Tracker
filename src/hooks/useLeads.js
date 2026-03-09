@@ -61,6 +61,11 @@ export function useLeads() {
 
         try {
             const snakeData = toSnakeCase(newLead);
+            // Clean up empty strings for datetime fields
+            if (snakeData.called_at === '') {
+                snakeData.called_at = null;
+            }
+
             const { error: insertErr } = await supabase.from('leads').insert([snakeData]);
             if (insertErr) throw insertErr;
         } catch (e) {
@@ -84,12 +89,16 @@ export function useLeads() {
                     : lead
             )
         );
-
         try {
-            const snakeField = field.replace(/([A-Z0-9])/g, '_$1').toLowerCase();
+            const snakeField = field.replace(/([A-Z])/g, '_$1').toLowerCase();
+            let updateValue = value;
+            if (snakeField === 'called_at' && updateValue === '') {
+                updateValue = null;
+            }
+
             const { error: updateErr } = await supabase
                 .from('leads')
-                .update({ [snakeField]: value, last_updated: now })
+                .update({ [snakeField]: updateValue, last_updated: now })
                 .eq('id', id);
 
             if (updateErr) throw updateErr;

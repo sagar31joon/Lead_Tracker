@@ -3,7 +3,7 @@
  * e.g. "companyName" → "company_name"
  */
 function camelToSnakeStr(str) {
-    return str.replace(/([A-Z0-9])/g, '_$1').toLowerCase();
+    return str.replace(/([A-Z])/g, '_$1').toLowerCase();
 }
 
 /**
@@ -11,7 +11,7 @@ function camelToSnakeStr(str) {
  * e.g. "company_name" → "companyName"
  */
 function snakeToCamelStr(str) {
-    return str.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());
+    return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 }
 
 /**
