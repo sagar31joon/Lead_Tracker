@@ -46,6 +46,7 @@ export const createEmptyLead = () => ({
   phone2: '',
   phone2Type: 'idk',
   whatsappNumber: '',
+  calledAt: '',
   task: '',
   email: '',
   location: '',

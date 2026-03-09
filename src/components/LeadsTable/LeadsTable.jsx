@@ -182,6 +182,110 @@ function EditableCell({ value, onChange, placeholder, multiline = false }) {
     );
 }
 
+function DateTimeCell({ value, onChange }) {
+    const rawVal = value || '';
+    const datePart = rawVal.includes('T') ? rawVal.split('T')[0] : rawVal;
+    const timePart = rawVal.includes('T') ? rawVal.split('T')[1]?.substring(0, 5) : '';
+    const hh = timePart ? timePart.split(':')[0] : '';
+    const mm = timePart ? timePart.split(':')[1] : '';
+
+    const handleDateChange = (newDate) => {
+        onChange(`${newDate}T${timePart || '00:00'}`);
+    };
+
+    return (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            <TextField
+                type="date"
+                size="small"
+                variant="standard"
+                value={datePart}
+                onChange={(e) => handleDateChange(e.target.value)}
+                sx={{ '& .MuiInput-root': { fontSize: '0.8rem' }, '& input::-webkit-calendar-picker-indicator': { filter: 'invert(1)' } }}
+            />
+            <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                <Select
+                    size="small"
+                    variant="standard"
+                    value={hh}
+                    displayEmpty
+                    onChange={(e) => onChange(`${datePart || new Date().toISOString().split('T')[0]}T${e.target.value}:${mm || '00'}`)}
+                    sx={{ fontSize: '0.8rem', color: '#9AA0B4', minWidth: 40 }}
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 200 } } }}
+                >
+                    <MenuItem value="" disabled>HH</MenuItem>
+                    {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')).map(h => (
+                        <MenuItem key={h} value={h} sx={{ fontSize: '0.8rem' }}>{h}</MenuItem>
+                    ))}
+                </Select>
+                <Typography sx={{ fontSize: '0.8rem', color: '#9AA0B4' }}>:</Typography>
+                <Select
+                    size="small"
+                    variant="standard"
+                    value={mm}
+                    displayEmpty
+                    onChange={(e) => onChange(`${datePart || new Date().toISOString().split('T')[0]}T${hh || '00'}:${e.target.value}`)}
+                    sx={{ fontSize: '0.8rem', color: '#9AA0B4', minWidth: 40 }}
+                    MenuProps={{ PaperProps: { sx: { maxHeight: 200 } } }}
+                >
+                    <MenuItem value="" disabled>MM</MenuItem>
+                    {Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0')).map(m => (
+                        <MenuItem key={m} value={m} sx={{ fontSize: '0.8rem' }}>{m}</MenuItem>
+                    ))}
+                </Select>
+            </Box>
+        </Box>
+    );
+}
+
+function DateTimeInput24({ value, onChange }) {
+    const rawVal = value || '';
+    const datePart = rawVal.includes('T') ? rawVal.split('T')[0] : rawVal;
+    const timePart = rawVal.includes('T') ? rawVal.split('T')[1]?.substring(0, 5) : '';
+    const hh = timePart ? timePart.split(':')[0] : '';
+    const mm = timePart ? timePart.split(':')[1] : '';
+
+    return (
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', width: '100%', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 1, p: 1 }}>
+            <Typography sx={{ fontSize: '0.75rem', color: '#9AA0B4', position: 'absolute', mt: -5, ml: 0.5, bgcolor: 'rgba(18, 24, 41, 1)', px: 0.5 }}>At</Typography>
+            <TextField
+                type="date"
+                size="small"
+                value={datePart}
+                onChange={(e) => onChange(`${e.target.value}T${timePart || '00:00'}`)}
+                sx={{ flex: 1, '& input::-webkit-calendar-picker-indicator': { filter: 'invert(1)' } }}
+            />
+            <TextField
+                select
+                size="small"
+                value={hh}
+                onChange={(e) => onChange(`${datePart || new Date().toISOString().split('T')[0]}T${e.target.value}:${mm || '00'}`)}
+                sx={{ minWidth: 60 }}
+                SelectProps={{ displayEmpty: true, MenuProps: { PaperProps: { sx: { maxHeight: 250 } } } }}
+            >
+                <MenuItem value="" disabled>HH</MenuItem>
+                {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')).map(h => (
+                    <MenuItem key={h} value={h}>{h}</MenuItem>
+                ))}
+            </TextField>
+            <Typography sx={{ color: '#9AA0B4', fontWeight: 'bold' }}>:</Typography>
+            <TextField
+                select
+                size="small"
+                value={mm}
+                onChange={(e) => onChange(`${datePart || new Date().toISOString().split('T')[0]}T${hh || '00'}:${e.target.value}`)}
+                sx={{ minWidth: 60 }}
+                SelectProps={{ displayEmpty: true, MenuProps: { PaperProps: { sx: { maxHeight: 250 } } } }}
+            >
+                <MenuItem value="" disabled>MM</MenuItem>
+                {Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0')).map(m => (
+                    <MenuItem key={m} value={m}>{m}</MenuItem>
+                ))}
+            </TextField>
+        </Box>
+    );
+}
+
 /* ===== Lead Preview Dialog (Desktop Read-Only) ===== */
 function LeadPreviewDialog({ lead, open, onClose }) {
     if (!lead) return null;
@@ -203,6 +307,20 @@ function LeadPreviewDialog({ lead, open, onClose }) {
                 </Stack>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
+                        <Box sx={infoSx}>
+                            <Typography sx={labelSx}>At</Typography>
+                            <Typography sx={valueSx}>
+                                {lead.calledAt ? (
+                                    <>
+                                        {lead.calledAt.split('T')[0]}
+                                        <br />
+                                        <span style={{ fontSize: '0.85em', color: '#9AA0B4' }}>
+                                            {new Date(lead.calledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </>
+                                ) : '-'}
+                            </Typography>
+                        </Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>Industry</Typography><Typography sx={valueSx}>{INDUSTRY_OPTIONS.find(i => i.value === lead.industry)?.label || '-'}</Typography></Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>Phone 1</Typography><Typography sx={valueSx}>{lead.phone1 || '-'} {lead.phone1Type !== 'idk' && <Typography component="span" sx={{ fontSize: '0.75rem', color: '#9AA0B4', ml: 0.5 }}>({CONTACT_TYPE_OPTIONS.find(c => c.value === lead.phone1Type)?.label})</Typography>}</Typography></Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>Email</Typography><Typography sx={valueSx}>{lead.email || '-'}</Typography></Box>
@@ -262,6 +380,12 @@ function LeadFormDialog({ lead, open, onClose, onSave }) {
                                 {STATUS_OPTIONS.map((opt) => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))}
                             </TextField>
                         </FormControl>
+                        <Box sx={{ width: '100%', position: 'relative', pt: 0.5 }}>
+                            <DateTimeInput24
+                                value={formData.calledAt}
+                                onChange={(val) => handleChange('calledAt', val)}
+                            />
+                        </Box>
                         <FormControl fullWidth>
                             <TextField select label="Service Need" value={formData.serviceNeed} onChange={(e) => handleChange('serviceNeed', e.target.value)}>
                                 {SERVICE_NEED_OPTIONS.map((opt) => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))}
@@ -332,9 +456,24 @@ function MobileLeadCard({ lead, index, onDelete, onEdit }) {
                 <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>{lead.companyName || 'Untitled'}</Typography>
 
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, mb: 1 }}>
+                    <Box>
+                        <Typography sx={labelSx}>At</Typography>
+                        <Typography sx={textSx}>
+                            {lead.calledAt ? (
+                                <>
+                                    {lead.calledAt.split('T')[0]}
+                                    <br />
+                                    <span style={{ fontSize: '0.85em', color: '#9AA0B4' }}>
+                                        {new Date(lead.calledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                </>
+                            ) : '-'}
+                        </Typography>
+                    </Box>
                     <Box><Typography sx={labelSx}>Industry</Typography><Typography sx={textSx}>{INDUSTRY_OPTIONS.find(i => i.value === lead.industry)?.label || '-'}</Typography></Box>
-                    <Box><Typography sx={labelSx}>Location</Typography><Typography sx={textSx}>{lead.location || '-'}</Typography></Box>
                 </Box>
+
+                <Box sx={{ mb: 1 }}><Typography sx={labelSx}>Location</Typography><Typography sx={textSx}>{lead.location || '-'}</Typography></Box>
 
                 {lead.mainProducts && (<Box sx={{ mb: 1 }}><Typography sx={labelSx}>Products</Typography><Typography sx={textSx}>{lead.mainProducts}</Typography></Box>)}
 
@@ -538,11 +677,6 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                             Add Lead
                         </Button>
                     </Tooltip>
-                    <Tooltip title="Reset to Demo Data">
-                        <IconButton onClick={onReset} sx={{ color: '#9AA0B4' }}>
-                            <ResetIcon />
-                        </IconButton>
-                    </Tooltip>
                 </Box>
             </Paper>
 
@@ -583,6 +717,15 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                                         onClick={() => handleSort('status')}
                                     >
                                         Status
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell sx={{ minWidth: 110 }}>
+                                    <TableSortLabel
+                                        active={sortField === 'calledAt'}
+                                        direction={sortField === 'calledAt' ? sortDir : 'asc'}
+                                        onClick={() => handleSort('calledAt')}
+                                    >
+                                        At
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell sx={{ minWidth: 120 }}>Service</TableCell>
@@ -636,6 +779,12 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                                             <StatusChip
                                                 value={lead.status}
                                                 onChange={(val) => onUpdate(lead.id, 'status', val)}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <DateTimeCell
+                                                value={lead.calledAt}
+                                                onChange={(val) => onUpdate(lead.id, 'calledAt', val)}
                                             />
                                         </TableCell>
                                         <TableCell>
