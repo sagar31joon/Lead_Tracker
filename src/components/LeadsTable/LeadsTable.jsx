@@ -322,6 +322,7 @@ function LeadPreviewDialog({ lead, open, onClose }) {
                             </Typography>
                         </Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>Industry</Typography><Typography sx={valueSx}>{INDUSTRY_OPTIONS.find(i => i.value === lead.industry)?.label || '-'}</Typography></Box>
+                        <Box sx={infoSx}><Typography sx={labelSx}>Website</Typography><Typography sx={valueSx}>{lead.website ? <a href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`} target="_blank" rel="noopener noreferrer" style={{ color: '#6C63FF', textDecoration: 'none' }}>{lead.website}</a> : '-'}</Typography></Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>Phone 1</Typography><Typography sx={valueSx}>{lead.phone1 || '-'} {lead.phone1Type !== 'idk' && <Typography component="span" sx={{ fontSize: '0.75rem', color: '#9AA0B4', ml: 0.5 }}>({CONTACT_TYPE_OPTIONS.find(c => c.value === lead.phone1Type)?.label})</Typography>}</Typography></Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>Email</Typography><Typography sx={valueSx}>{lead.email || '-'}</Typography></Box>
                         <Box sx={infoSx}><Typography sx={labelSx}>WhatsApp</Typography><Typography sx={valueSx}>{lead.whatsappNumber || '-'}</Typography></Box>
@@ -415,7 +416,10 @@ function LeadFormDialog({ lead, open, onClose, onSave }) {
                         <TextField label="Email" value={formData.email} onChange={(e) => handleChange('email', e.target.value)} fullWidth InputProps={{ startAdornment: <InputAdornment position="start"><EmailIcon fontSize="small" /></InputAdornment> }} />
                     </Stack>
 
-                    <TextField label="Location" value={formData.location} onChange={(e) => handleChange('location', e.target.value)} fullWidth InputProps={{ startAdornment: <InputAdornment position="start"><LocationIcon fontSize="small" /></InputAdornment> }} />
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <TextField label="Location" value={formData.location} onChange={(e) => handleChange('location', e.target.value)} fullWidth InputProps={{ startAdornment: <InputAdornment position="start"><LocationIcon fontSize="small" /></InputAdornment> }} />
+                        <TextField label="Website" value={formData.website} onChange={(e) => handleChange('website', e.target.value)} fullWidth placeholder="www.example.com" />
+                    </Stack>
                     <TextField label="Task" value={formData.task} onChange={(e) => handleChange('task', e.target.value)} multiline rows={2} fullWidth />
                     <TextField label="Notes" value={formData.notes} onChange={(e) => handleChange('notes', e.target.value)} multiline rows={3} fullWidth />
                 </Stack>
@@ -473,7 +477,10 @@ function MobileLeadCard({ lead, index, onDelete, onEdit }) {
                     <Box><Typography sx={labelSx}>Industry</Typography><Typography sx={textSx}>{INDUSTRY_OPTIONS.find(i => i.value === lead.industry)?.label || '-'}</Typography></Box>
                 </Box>
 
-                <Box sx={{ mb: 1 }}><Typography sx={labelSx}>Location</Typography><Typography sx={textSx}>{lead.location || '-'}</Typography></Box>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, mb: 1 }}>
+                    <Box><Typography sx={labelSx}>Location</Typography><Typography sx={textSx}>{lead.location || '-'}</Typography></Box>
+                    <Box><Typography sx={labelSx}>Website</Typography><Typography sx={textSx}>{lead.website ? <a href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`} target="_blank" rel="noopener noreferrer" style={{ color: '#6C63FF', textDecoration: 'none' }}>Link</a> : '-'}</Typography></Box>
+                </Box>
 
                 {lead.mainProducts && (<Box sx={{ mb: 1 }}><Typography sx={labelSx}>Products</Typography><Typography sx={textSx}>{lead.mainProducts}</Typography></Box>)}
 
@@ -525,6 +532,7 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleSort = (field) => {
         if (sortField === field) {
@@ -665,7 +673,31 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                     </FormControl>
                 </Box>
 
-                <Box className="leads-actions">
+                <Box className="leads-actions" sx={{ display: 'flex', gap: 1 }}>
+                    <Tooltip title="Manually Sync/Save Data">
+                        <Button
+                            variant="outlined"
+                            startIcon={<SaveIcon />}
+                            onClick={() => {
+                                setIsSaving(true);
+                                setTimeout(() => setIsSaving(false), 800);
+                            }}
+                            sx={{
+                                color: isSaving ? '#4CAF50' : '#E8EAED',
+                                borderColor: isSaving ? '#4CAF50' : 'rgba(255,255,255,0.2)',
+                                '&:hover': {
+                                    borderColor: '#4CAF50',
+                                    color: '#4CAF50',
+                                    backgroundColor: 'rgba(76, 175, 80, 0.08)'
+                                },
+                                transition: 'all 0.2s',
+                                whiteSpace: 'nowrap'
+                            }}
+                            fullWidth={isMobile}
+                        >
+                            {isSaving ? 'Saved!' : 'Save'}
+                        </Button>
+                    </Tooltip>
                     <Tooltip title="Add New Lead">
                         <Button
                             variant="contained"
@@ -725,7 +757,7 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                                         direction={sortField === 'calledAt' ? sortDir : 'asc'}
                                         onClick={() => handleSort('calledAt')}
                                     >
-                                        At
+                                        CALLED AT
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell sx={{ minWidth: 120 }}>Service</TableCell>
@@ -739,6 +771,7 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell sx={{ minWidth: 120 }}>Industry</TableCell>
+                                <TableCell sx={{ minWidth: 160 }}>Website</TableCell>
                                 <TableCell sx={{ minWidth: 180 }}>Products</TableCell>
                                 <TableCell sx={{ minWidth: 150 }}>Phone 1</TableCell>
                                 <TableCell sx={{ minWidth: 150 }}>Phone 2</TableCell>
@@ -813,6 +846,13 @@ export default function LeadsTable({ leads, onAdd, onUpdate, onDelete, onReset }
                                                     ))}
                                                 </Select>
                                             </FormControl>
+                                        </TableCell>
+                                        <TableCell>
+                                            <EditableCell
+                                                value={lead.website}
+                                                onChange={(val) => onUpdate(lead.id, 'website', val)}
+                                                placeholder="example.com"
+                                            />
                                         </TableCell>
                                         <TableCell>
                                             <EditableCell

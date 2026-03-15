@@ -6,6 +6,8 @@ export const STATUS_OPTIONS = [
   { value: 'lost', label: 'Lost', color: '#F44336' },
   { value: 'not-interested', label: 'Not Interested', color: '#9E9E9E' },
   { value: 'on-hold', label: 'On Hold', color: '#FFC107' },
+  { value: 'not-picked', label: 'Not-picked', color: '#607D8B' },
+  { value: 'wrong-number', label: 'Wrong Number', color: '#E91E63' },
 ];
 
 export const SERVICE_NEED_OPTIONS = [
@@ -50,6 +52,7 @@ export const createEmptyLead = () => ({
   task: '',
   email: '',
   location: '',
+  website: '',
   dateAdded: new Date().toISOString(),
   lastUpdated: new Date().toISOString(),
   notes: '',

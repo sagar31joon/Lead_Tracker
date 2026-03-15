@@ -50,6 +50,7 @@ export function useLeads() {
             task: '',
             email: '',
             location: '',
+            website: '',
             notes: '',
             dateAdded: now,
             lastUpdated: now,
